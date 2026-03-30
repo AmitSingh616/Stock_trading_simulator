@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — VirtualTrade</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- ── Navbar ─────────────────────────────────────────── -->
+  <nav class="app-navbar">
+    <a href="index.html" class="nav-brand">
+      <span class="brand-dot"></span>VirtualTrade
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html"     class="active">Dashboard</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="stocks.html">  Stocks</a></li>
+      <li><a href="orders.html">  Orders</a></li>
+      <li><a href="watchlist.html">Watchlist</a></li>
+    </ul>
+    <div class="nav-right">
+      <span class="nav-balance">
+        <span class="live-dot"></span>
+        Net Worth: <span id="nav-balance-amount">—</span>
+      </span>
+      <span style="color:var(--text-muted);font-size:0.82rem" id="nav-username"></span>
+      <button id="logout-btn" class="btn-ghost">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- ── 3-Column Grid ──────────────────────────────────── -->
+  <div class="dashboard-grid">
+
+    <!-- ════════ LEFT: Watchlist ════════ -->
+    <div class="col-watchlist" style="background:var(--bg-base)">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)">Watchlist</span>
+        <span class="live-dot"></span>
+      </div>
+
+      <!-- Stock list -->
+      <div id="watchlist-items"></div>
+
+      <!-- Search & Add -->
+      <div style="padding:12px;border-top:1px solid var(--border-subtle);margin-top:auto;position:sticky;bottom:0;background:var(--bg-base)">
+        <div style="position:relative">
+          <input id="wl-search" type="text" class="form-dark" placeholder="Search symbol..."
+                 style="font-size:0.8rem;padding:7px 10px;padding-right:36px">
+          <button id="wl-add-btn" class="btn-ghost" title="Add to watchlist"
+                  style="position:absolute;right:4px;top:50%;transform:translateY(-50%);padding:3px 7px;font-size:0.85rem;border:none">+</button>
+        </div>
+        <div id="search-results"
+             style="background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);overflow:hidden;display:none">
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ CENTER: Chart ════════ -->
+    <div class="col-chart">
+      <div id="chart-section">
+
+        <!-- Chart Header -->
+        <div class="chart-header">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div id="chart-ticker" class="chart-ticker">—</div>
+              <div id="chart-vol-tier"></div>
+            </div>
+            <div id="chart-company" class="chart-company">Select a stock from your watchlist</div>
+          </div>
+          <div style="text-align:right">
+            <div id="chart-price-big" class="chart-price-big">—</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">
+              <span class="live-dot"></span>Updates every 20s
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart Canvas -->
+        <div class="card-dark" style="margin-bottom:16px">
+          <div class="card-body-dark" style="padding:16px">
+            <div class="chart-container">
+              <canvas id="price-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-label">Current</div>
+            <div class="stat-value" id="stat-price">—</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Session High</div>
+            <div class="stat-value text-green" id="stat-high">—</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Session Low</div>
+            <div class="stat-value text-red" id="stat-low">—</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Open</div>
+            <div class="stat-value" id="stat-open">—</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════ RIGHT: Trade Panel ════════ -->
+    <div class="col-trade">
+
+      <!-- Stock info -->
+      <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border-subtle)">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:4px">Trading</div>
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span id="trade-stock-symbol" class="mono" style="font-size:1.3rem;font-weight:700">—</span>
+          <span id="trade-current-price" class="price text-green" style="font-size:0.9rem">—</span>
+        </div>
+      </div>
+
+      <!-- Tabs: Buy / Sell / Order -->
+      <div class="trade-tabs">
+        <button class="trade-tab active-buy" data-tab="buy">Buy</button>
+        <button class="trade-tab" data-tab="sell">Sell</button>
+        <button class="trade-tab" data-tab="order">Orders</button>
+      </div>
+
+      <!-- BUY Panel -->
+      <div id="panel-buy">
+        <form id="buy-form">
+          <div style="margin-bottom:14px">
+            <label class="form-label-dark">Quantity</label>
+            <input type="number" id="buy-qty" class="form-dark" placeholder="0" min="1" step="1">
+          </div>
+          <div id="buy-estimate" style="background:var(--bg-base);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:14px;font-size:0.8rem">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span class="text-secondary">Est. Cost</span>
+              <span class="mono" id="buy-cost-estimate">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span class="text-secondary">Market Order</span>
+              <span class="mono text-muted">Current Price</span>
+            </div>
+          </div>
+          <button type="submit" class="btn-trade-buy">Buy</button>
+        </form>
+      </div>
+
+      <!-- SELL Panel -->
+      <div id="panel-sell" class="d-none">
+        <form id="sell-form">
+          <div style="margin-bottom:14px">
+            <label class="form-label-dark">Quantity</label>
+            <input type="number" id="sell-qty" class="form-dark" placeholder="0" min="1" step="1">
+          </div>
+          <div style="background:var(--bg-base);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:14px;font-size:0.8rem">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span class="text-secondary">Est. Proceeds</span>
+              <span class="mono" id="sell-proceeds-estimate">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span class="text-secondary">Market Order</span>
+              <span class="mono text-muted">Current Price</span>
+            </div>
+          </div>
+          <button type="submit" class="btn-trade-sell">Sell</button>
+        </form>
+      </div>
+
+      <!-- PENDING ORDER Panel -->
+      <div id="panel-order" class="d-none">
+        <form id="order-form">
+          <div style="margin-bottom:14px">
+            <label class="form-label-dark">Order Type</label>
+            <select id="order-type" class="form-dark">
+              <option value="LIMIT_BUY">Limit Buy — buy when price ≤ trigger</option>
+              <option value="STOP_LOSS">Stop Loss — sell when price ≤ trigger</option>
+              <option value="TAKE_PROFIT">Take Profit — sell when price ≥ trigger</option>
+            </select>
+          </div>
+          <div style="margin-bottom:14px">
+            <label class="form-label-dark">Trigger Price ($)</label>
+            <input type="number" id="order-trigger" class="form-dark" placeholder="0.00" min="0.01" step="0.01">
+          </div>
+          <div style="margin-bottom:16px">
+            <label class="form-label-dark">Quantity</label>
+            <input type="number" id="order-qty" class="form-dark" placeholder="0" min="1" step="1">
+          </div>
+          <div style="background:var(--accent-dim);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:14px;font-size:0.77rem;color:var(--text-secondary)">
+            ℹ Funds are not reserved. Order is cancelled automatically if balance or shares are insufficient at execution.
+          </div>
+          <button type="submit" class="btn-outline-accent" style="width:100%;padding:10px">Place Order</button>
+        </form>
+      </div>
+
+      <!-- Quick links -->
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border-subtle)">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px">Quick Links</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <a href="portfolio.html" style="color:var(--text-secondary);font-size:0.82rem;text-decoration:none;padding:6px 8px;border-radius:var(--radius-sm);transition:all 0.15s" onmouseover="this.style.background='var(--bg-elevated)';this.style.color='var(--text-primary)'" onmouseout="this.style.background='';this.style.color='var(--text-secondary)'">→ My Portfolio</a>
+          <a href="orders.html"   style="color:var(--text-secondary);font-size:0.82rem;text-decoration:none;padding:6px 8px;border-radius:var(--radius-sm);transition:all 0.15s" onmouseover="this.style.background='var(--bg-elevated)';this.style.color='var(--text-primary)'" onmouseout="this.style.background='';this.style.color='var(--text-secondary)'">→ Pending Orders</a>
+          <a href="watchlist.html"style="color:var(--text-secondary);font-size:0.82rem;text-decoration:none;padding:6px 8px;border-radius:var(--radius-sm);transition:all 0.15s" onmouseover="this.style.background='var(--bg-elevated)';this.style.color='var(--text-primary)'" onmouseout="this.style.background='';this.style.color='var(--text-secondary)'">→ Manage Watchlist</a>
+        </div>
+      </div>
+
+    </div><!-- /col-trade -->
+  </div><!-- /dashboard-grid -->
+</div>
+
+<div id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/dashboard.js"></script>
+<script>
+  // Live cost estimate while typing
+  function updateEstimate(inputId, estimateId) {
+    const input = document.getElementById(inputId);
+    const est   = document.getElementById(estimateId);
+    if (!input || !est) return;
+    input.addEventListener('input', () => {
+      const qty = parseInt(input.value) || 0;
+      const price = parseFloat(activeStockData?.current_price) || 0;
+      est.textContent = qty > 0 && price > 0 ? fmtCurrency(qty * price) : '—';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    updateEstimate('buy-qty', 'buy-cost-estimate');
+    updateEstimate('sell-qty', 'sell-proceeds-estimate');
+
+    // Handle sessionStorage stock selection (from stocks.html "Trade" button)
+    const pending = sessionStorage.getItem('selectStock');
+    if (pending) { sessionStorage.removeItem('selectStock'); }
+  });
+</script>
+</body>
+</html>

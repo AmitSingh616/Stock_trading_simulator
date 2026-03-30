@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — VirtualTrade</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page-wrapper">
+  <div class="auth-page">
+    <div class="auth-card">
+
+      <div class="auth-logo">
+        <span class="dot"></span>
+        VirtualTrade
+      </div>
+
+      <p style="text-align:center;color:var(--text-secondary);font-size:0.85rem;margin-bottom:28px">
+        Start with <span style="color:var(--green);font-family:'JetBrains Mono',monospace;font-weight:600">$100,000</span> virtual cash
+      </p>
+
+      <div id="error-msg" style="display:none;background:var(--red-dim);border:1px solid var(--red);border-radius:var(--radius-sm);padding:10px 14px;font-size:0.83rem;color:var(--red);margin-bottom:16px"></div>
+
+      <form id="register-form" novalidate>
+        <div style="margin-bottom:14px">
+          <label class="form-label-dark">Username</label>
+          <input type="text" id="username" class="form-dark" placeholder="traderguy42" required minlength="3" autocomplete="username">
+        </div>
+
+        <div style="margin-bottom:14px">
+          <label class="form-label-dark">Email</label>
+          <input type="email" id="email" class="form-dark" placeholder="you@example.com" required autocomplete="email">
+        </div>
+
+        <div style="margin-bottom:24px">
+          <label class="form-label-dark">Password</label>
+          <input type="password" id="password" class="form-dark" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password">
+        </div>
+
+        <button type="submit" id="submit-btn" class="btn-trade-buy" style="font-size:0.95rem;padding:12px">
+          Create Account
+        </button>
+      </form>
+
+      <div class="auth-divider">or</div>
+
+      <p style="text-align:center;font-size:0.83rem;color:var(--text-secondary)">
+        Already have an account?
+        <a href="login.html" style="color:var(--accent);text-decoration:none;font-weight:500">Sign in</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script>
+  document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn      = document.getElementById('submit-btn');
+    const errEl    = document.getElementById('error-msg');
+
+    errEl.style.display = 'none';
+
+    if (username.length < 3) { errEl.textContent = 'Username must be at least 3 characters'; errEl.style.display = 'block'; return; }
+    if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters'; errEl.style.display = 'block'; return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Creating account...';
+
+    try {
+      await Api.auth.register(username, email, password);
+      window.location.href = 'index.html';
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Create Account';
+    }
+  });
+</script>
+</body>
+</html>

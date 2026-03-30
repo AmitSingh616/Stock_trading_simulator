@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders — VirtualTrade</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page-wrapper">
+
+  <nav class="app-navbar">
+    <a href="index.html" class="nav-brand"><span class="brand-dot"></span>VirtualTrade</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="stocks.html">Stocks</a></li>
+      <li><a href="orders.html" class="active">Orders</a></li>
+      <li><a href="watchlist.html">Watchlist</a></li>
+    </ul>
+    <div class="nav-right">
+      <span class="nav-balance"><span class="live-dot"></span>Net Worth: <span id="nav-balance-amount">—</span></span>
+      <span style="color:var(--text-muted);font-size:0.82rem" id="nav-username"></span>
+      <button id="logout-btn" class="btn-ghost">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="page-content">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+      <div>
+        <h2 style="font-size:1.4rem;margin-bottom:2px">
+          Pending Orders
+          <span id="orders-count" style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;background:var(--bg-elevated);padding:2px 10px;border-radius:20px;margin-left:8px;color:var(--text-secondary)">0</span>
+        </h2>
+        <p style="color:var(--text-secondary);font-size:0.82rem">Orders execute automatically when price conditions are met</p>
+      </div>
+      <a href="index.html" class="btn-outline-accent" style="text-decoration:none;padding:8px 16px">+ New Order</a>
+    </div>
+
+    <!-- Order type legend -->
+    <div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--text-secondary)">
+        <span style="background:var(--green-dim);color:var(--green);border-radius:4px;padding:1px 8px;font-weight:700;font-size:0.72rem">LIMIT BUY</span>
+        Executes when price ≤ trigger
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--text-secondary)">
+        <span style="background:var(--red-dim);color:var(--red);border-radius:4px;padding:1px 8px;font-weight:700;font-size:0.72rem">STOP LOSS</span>
+        Sell when price ≤ trigger
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--text-secondary)">
+        <span style="background:var(--accent-dim);color:var(--accent);border-radius:4px;padding:1px 8px;font-weight:700;font-size:0.72rem">TAKE PROFIT</span>
+        Sell when price ≥ trigger
+      </div>
+    </div>
+
+    <div class="card-dark">
+      <div class="card-body-dark" style="padding:0">
+        <div style="overflow-x:auto">
+          <table class="table-dark-custom">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Type</th>
+                <th>Quantity</th>
+                <th>Trigger</th>
+                <th>Current Price</th>
+                <th>Created</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <tr><td colspan="7" class="text-center py-5"><span class="spinner"></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/orders.js"></script>
+</body>
+</html>

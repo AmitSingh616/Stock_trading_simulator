@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio — VirtualTrade</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page-wrapper">
+
+  <nav class="app-navbar">
+    <a href="index.html" class="nav-brand"><span class="brand-dot"></span>VirtualTrade</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="portfolio.html" class="active">Portfolio</a></li>
+      <li><a href="stocks.html">Stocks</a></li>
+      <li><a href="orders.html">Orders</a></li>
+      <li><a href="watchlist.html">Watchlist</a></li>
+    </ul>
+    <div class="nav-right">
+      <span class="nav-balance"><span class="live-dot"></span>Net Worth: <span id="nav-balance-amount">—</span></span>
+      <span style="color:var(--text-muted);font-size:0.82rem" id="nav-username"></span>
+      <button id="logout-btn" class="btn-ghost">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="page-content">
+
+    <!-- ── Net Worth Hero ──────────────────────────────── -->
+    <div class="networth-hero">
+      <div style="display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start">
+        <div>
+          <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:8px">Total Portfolio Value</div>
+          <div id="networth-amount" class="networth-amount text-primary">—</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+            <span id="perf-pnl" class="price" style="font-size:1rem">—</span>
+            <span id="perf-pct"></span>
+            <span class="text-muted" style="font-size:0.78rem">vs starting $<span id="perf-start">—</span></span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:right">
+          <div>
+            <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">Cash</div>
+            <div id="networth-cash" class="price" style="font-size:1rem">—</div>
+          </div>
+          <div>
+            <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">Invested</div>
+            <div id="networth-stocks" class="price" style="font-size:1rem">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Portfolio History Chart ─────────────────────── -->
+    <div class="card-dark" style="margin-bottom:24px">
+      <div class="card-header-dark">
+        <h6>Portfolio Value History</h6>
+        <span style="font-size:0.72rem;color:var(--text-muted)">Snapshots every 20s</span>
+      </div>
+      <div class="card-body-dark">
+        <div style="position:relative;height:260px">
+          <canvas id="portfolio-history-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Holdings Table ──────────────────────────────── -->
+    <div class="card-dark" style="margin-bottom:24px">
+      <div class="card-header-dark">
+        <h6>Holdings</h6>
+        <a href="index.html" class="btn-outline-accent" style="font-size:0.75rem;padding:4px 12px;text-decoration:none">+ Buy More</a>
+      </div>
+      <div class="card-body-dark" style="padding:0">
+        <div style="overflow-x:auto">
+          <table class="table-dark-custom">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Qty</th>
+                <th>Avg Cost</th>
+                <th>Current</th>
+                <th>P&amp;L ($)</th>
+                <th>P&amp;L (%)</th>
+              </tr>
+            </thead>
+            <tbody id="holdings-tbody">
+              <tr><td colspan="6" class="text-center py-4"><span class="spinner"></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Transaction History ─────────────────────────── -->
+    <div class="card-dark">
+      <div class="card-header-dark">
+        <h6>Transaction History</h6>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select id="txn-type-filter" class="form-dark" style="padding:4px 10px;font-size:0.8rem;width:auto">
+            <option value="">All Types</option>
+            <option value="BUY">BUY</option>
+            <option value="SELL">SELL</option>
+          </select>
+          <select id="txn-limit-filter" class="form-dark" style="padding:4px 10px;font-size:0.8rem;width:auto">
+            <option value="25">25</option>
+            <option value="50" selected>50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body-dark" style="padding:0">
+        <div style="overflow-x:auto">
+          <table class="table-dark-custom">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Type</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody id="txn-tbody">
+              <tr><td colspan="5" class="text-center py-4"><span class="spinner"></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-content -->
+</div>
+
+<div id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/portfolio.js"></script>
+</body>
+</html>

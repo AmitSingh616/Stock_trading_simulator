@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watchlist — VirtualTrade</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page-wrapper">
+
+  <nav class="app-navbar">
+    <a href="index.html" class="nav-brand"><span class="brand-dot"></span>VirtualTrade</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="stocks.html">Stocks</a></li>
+      <li><a href="orders.html">Orders</a></li>
+      <li><a href="watchlist.html" class="active">Watchlist</a></li>
+    </ul>
+    <div class="nav-right">
+      <span class="nav-balance"><span class="live-dot"></span>Net Worth: <span id="nav-balance-amount">—</span></span>
+      <span style="color:var(--text-muted);font-size:0.82rem" id="nav-username"></span>
+      <button id="logout-btn" class="btn-ghost">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="page-content">
+
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:20px;flex-wrap:wrap">
+
+      <div>
+        <h2 style="font-size:1.4rem;margin-bottom:2px">
+          Watchlist
+          <span id="wl-count" style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;background:var(--bg-elevated);padding:2px 10px;border-radius:20px;margin-left:8px;color:var(--text-secondary)">0</span>
+        </h2>
+        <p style="color:var(--text-secondary);font-size:0.82rem">Track stocks you're interested in. Click Trade to open them on the dashboard.</p>
+      </div>
+
+      <!-- Add stock search -->
+      <div style="position:relative;min-width:300px">
+        <div style="display:flex;gap:8px">
+          <div style="position:relative;flex:1">
+            <input id="add-search" type="text" class="form-dark" placeholder="Search by symbol or name..."
+                   style="padding-right:12px" autocomplete="off">
+            <div id="search-dropdown"
+                 style="display:none;position:absolute;top:100%;left:0;right:0;z-index:50;
+                        background:var(--bg-card);border:1px solid var(--border);
+                        border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);
+                        max-height:220px;overflow-y:auto;box-shadow:var(--shadow-elevated)">
+            </div>
+          </div>
+          <button id="add-btn" class="btn-trade-buy" style="white-space:nowrap;width:auto;padding:9px 16px">Add Stock</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Cards grid -->
+    <div id="watchlist-cards" class="stocks-grid"></div>
+
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/watchlist.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stocks — VirtualTrade</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    #modal-overlay {
+      display:none;position:fixed;inset:0;
+      background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:500;
+    }
+    #stock-modal {
+      display:none;position:fixed;top:50%;left:50%;
+      transform:translate(-50%,-50%);z-index:600;
+      background:var(--bg-card);border:1px solid var(--border);
+      border-radius:var(--radius-lg);padding:28px;
+      width:min(700px, 95vw);flex-direction:column;gap:20px;
+      box-shadow:var(--shadow-elevated);
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <nav class="app-navbar">
+    <a href="index.html" class="nav-brand"><span class="brand-dot"></span>VirtualTrade</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="stocks.html" class="active">Stocks</a></li>
+      <li><a href="orders.html">Orders</a></li>
+      <li><a href="watchlist.html">Watchlist</a></li>
+    </ul>
+    <div class="nav-right">
+      <span class="nav-balance"><span class="live-dot"></span>Net Worth: <span id="nav-balance-amount">—</span></span>
+      <span style="color:var(--text-muted);font-size:0.82rem" id="nav-username"></span>
+      <button id="logout-btn" class="btn-ghost">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="page-content">
+
+    <!-- Header + Filters -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+      <div>
+        <h2 style="font-size:1.4rem;margin-bottom:2px">Markets</h2>
+        <p style="color:var(--text-secondary);font-size:0.82rem">
+          <span class="live-dot"></span>Prices update every 20 seconds
+        </p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <input id="search-input" type="text" class="form-dark" placeholder="Search symbol..."
+               style="width:180px;padding:7px 12px;font-size:0.82rem">
+        <select id="vol-filter" class="form-dark" style="width:auto;padding:7px 12px;font-size:0.82rem">
+          <option value="">All Tiers</option>
+          <option value="STABLE">Stable</option>
+          <option value="NORMAL">Normal</option>
+          <option value="VOLATILE">Volatile</option>
+        </select>
+        <select id="sort-select" class="form-dark" style="width:auto;padding:7px 12px;font-size:0.82rem">
+          <option value="symbol">Sort: Symbol</option>
+          <option value="price_desc">Sort: Price ↓</option>
+          <option value="price_asc">Sort: Price ↑</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div id="stocks-grid" class="stocks-grid"></div>
+
+  </div>
+</div>
+
+<!-- Modal overlay + Stock chart modal -->
+<div id="modal-overlay"></div>
+<div id="stock-modal">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="modal-symbol" class="mono" style="font-size:1.5rem;font-weight:700"></div>
+        <div id="modal-vol"></div>
+      </div>
+      <div id="modal-company" class="text-secondary" style="font-size:0.82rem;margin-top:2px"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div id="modal-price" class="price text-green" style="font-size:1.6rem"></div>
+      <button id="modal-close" class="btn-ghost" style="font-size:1rem;padding:6px 10px">✕</button>
+    </div>
+  </div>
+  <div style="position:relative;height:300px">
+    <canvas id="modal-chart"></canvas>
+  </div>
+  <div style="display:flex;gap:10px">
+    <a id="modal-trade-link" href="index.html" class="btn-trade-buy"
+       style="flex:1;text-align:center;text-decoration:none;padding:10px">Trade on Dashboard</a>
+    <button onclick="addToWatchlist(document.getElementById('modal-symbol').textContent)" class="btn-outline-accent" style="flex:1">+ Add to Watchlist</button>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/stocks.js"></script>
+</body>
+</html>
